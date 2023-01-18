@@ -1,0 +1,47 @@
+list of features:
+---------------------
+
+* base search:
+    * name (anime, profile)
+
+* advance search
+    * filterign options (can select multiple genres)
+    * multiple score(score >=)
+    - by genre
+    - by date
+    - by score
+    * Rankings block:
+        * all anime
+        * top anime all time
+        * top anime new (?)
+
+
+* review page - list of review posted by users
+
+* profile page 
+    * add an anime
+    * add review
+
+* home page:
+    * top 5-10 scored animes
+    * newest animes released
+    * signup
+    * logo
+
+* anime page:
+    * information about the anime
+    * similar animes
+
+* landing page - must register to website to view content (?)
+
+* connection between users (sending msgs) ? ask Osnat
+
+Advanced queries:
+1. score calculation runtime (avg over data)
+2. group by
+3. having (additional selection on group)
+4. earliset reviews
+5. earliset posts per profile
+6. most active profiles (by reviews count above avg)
+
+
