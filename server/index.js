@@ -35,7 +35,7 @@ app.post('/register', (req, res) => {
     const sqlInsert = "INSERT INTO profiles (id, profile_name, password, gender, birthday) VALUES (?,?,?,?,?)";
     db.query(
         sqlInsert, 
-        [id, username, password, gender, birthday],
+        [0, username, password, gender, birthday],
         (err, result) => {
             if (err) {
                 console.log(err);
@@ -68,6 +68,52 @@ app.post('/login', (req, res) => {
         }
     );
 });
+
+app.post('/', (req, res) => {
+    const animeName = req.body.animeName;
+    const sqlQuery = "SELECT * FROM animes WHERE title = ?";
+    db.query(
+        sqlQuery,
+        animeName,
+        (err, result) => {
+            if(err) {
+                res.send({err: err})
+            }
+            
+            if(result.length > 0) {
+                console.log(result);
+                res.send(result)
+            } else {
+                res.send({ message: "Anime doesent exist" });
+                console.log("Anime doesnt exist");
+            }
+        }
+    )
+})
+
+app.post('/', (req, res) => {
+    const userName = req.body.userName;
+    const sqlQuery = "SELECT * FROM profiles WHERE profile_name = ?";
+
+    db.query(
+        sqlQuery,
+        userName,
+        (err, result) => {
+            if(err) {
+                res.send({err: err})
+            }
+            
+            if(result.length > 0) {
+                res.send(result)
+                console.log(result);
+            } else {
+                res.send({ message: "User doesent exist" });
+                console.log("User doesnt exist");
+            }
+        }
+    )
+
+})
 
 
 app.listen(3001, () => {

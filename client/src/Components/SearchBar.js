@@ -1,30 +1,20 @@
 import React, { useState } from "react";
-import "./SearchBar.css";
+// import "./SearchBar.css";
 import SearchIcon from "@material-ui/icons/Search";
 import CloseIcon from "@material-ui/icons/Close";
+import Axios from "axios";
 
 function SearchBar({ placeholder, data }) {
-  const [filteredData, setFilteredData] = useState([]);
-  const [wordEntered, setWordEntered] = useState("");
+  const [anime, setAnime] = useState();
 
-  const handleFilter = (event) => {
-    const searchWord = event.target.value;
-    setWordEntered(searchWord);
-    const newFilter = data.filter((value) => {
-      return value.title.toLowerCase().includes(searchWord.toLowerCase());
-    });
-
-    if (searchWord === "") {
-      setFilteredData([]);
-    } else {
-      setFilteredData(newFilter);
-    }
-  };
-
-  const clearInput = () => {
-    setFilteredData([]);
-    setWordEntered("");
-  };
+  const handleSearch = () => {
+    Axios.post("http://localhost:3001/register", {
+            anime: anime
+        }).then((response) => {
+            console.log(response)
+        });
+        console.log("after register");
+    };
 
   return (
     <div className="search">
@@ -32,28 +22,12 @@ function SearchBar({ placeholder, data }) {
         <input
           type="text"
           placeholder={placeholder}
-          value={wordEntered}
-          onChange={handleFilter}
+          onChange={(e) => setAnime(e.target.value)}
+          value={anime}
+          required 
         />
-        <div className="searchIcon">
-          {filteredData.length === 0 ? (
-            <SearchIcon />
-          ) : (
-            <CloseIcon id="clearBtn" onClick={clearInput} />
-          )}
-        </div>
       </div>
-      {filteredData.length != 0 && (
-        <div className="dataResult">
-          {filteredData.slice(0, 15).map((value, key) => {
-            return (
-              <a className="dataItem" href={value.link} target="_blank">
-                <p>{value.title} </p>
-              </a>
-            );
-          })}
-        </div>
-      )}
+      <button onClick={handleSearch}>Search</button>
     </div>
   );
 }
