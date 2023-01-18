@@ -1,0 +1,9 @@
+#!/bin/bash
+# create databse
+python ./create_db.py
+
+# create tables
+python ./create_tables.py
+
+# upload data
+python ./connector.py
