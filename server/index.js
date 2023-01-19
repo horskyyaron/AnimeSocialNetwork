@@ -1,121 +1,93 @@
-const express = require("express");
+import express from "express";
+import {
+  getProfiles,
+  getProfileName,
+  getNumOfUsers,
+  isUsernameTaken,
+  createUser,
+  getAnimeAvgScroe,
+  getTopAnimes,
+  getUserFavAnimes,
+  getAllGenres,
+  getAnimeByGenreList,
+  getMostActiveUsers,
+  check_credentials,
+} from "./database.js";
+
 const app = express();
-const mysql = require("mysql");
-const cors = require("cors");
-
 app.use(express.json());
-app.use(cors());
 
-const db = mysql.createConnection({
-    user: "root",
-    host: "localhost",
-    password: "password",
-    database: "anime",
-    
+app.get("/all_genres", async (req, res) => {
+  const genres = await getAllGenres();
+  res.send(genres);
 });
 
-db.connect((err) => {
-    if(err) {
-      throw err;  
-    }
-    console.log("MySql Connected...");
-})
-
-var currentUser = null;
-
-/*sign up new user*/
-app.post('/register', (req, res) => {
-    
-    const count = db.query("SELECT COUNT(*) FROM profiles");
-    const id = count;
-    const username = req.body.username;
-    const password = req.body.password;
-    const gender = req.body.gender;
-    const birthday = req.body.birthday;
-    const sqlInsert = "INSERT INTO profiles (id, profile_name, password, gender, birthday) VALUES (?,?,?,?,?)";
-    db.query(
-        sqlInsert, 
-        [0, username, password, gender, birthday],
-        (err, result) => {
-            if (err) {
-                console.log(err);
-            }
-        }
-    );
+// genres should be a string of the following format a,b,c...
+app.get("/animes/:genres", async (req, res) => {
+  const genres = req.params.genres.split(",");
+  const animes = await getAnimeByGenreList(genres);
+  res.send(animes);
 });
 
-/*login to the website*/
-app.post('/login', (req, res) => {
-
-    const username = req.body.username;
-    const password = req.body.password;
-
-    db.query(
-        "SELECT * FROM profiles WHERE profile_name = ? AND password = ?",
-        [username, password],
-        (err, result) => {
-            if(err) {
-                res.send({err: err})
-            }
-            
-            if(result.length > 0) {
-                currentUser = username;
-                res.send(result)
-            } else {
-                res.send({ message: "Wrong username/password comnination" });
-                console.log("user doesnt exist");
-            }
-        }
-    );
+app.get("/active_users", async (req, res) => {
+  const active_users = await getMostActiveUsers(10);
+  res.send(active_users);
 });
 
-app.post('/', (req, res) => {
-    const animeName = req.body.animeName;
-    const sqlQuery = "SELECT * FROM animes WHERE title = ?";
-    db.query(
-        sqlQuery,
-        animeName,
-        (err, result) => {
-            if(err) {
-                res.send({err: err})
-            }
-            
-            if(result.length > 0) {
-                console.log(result);
-                res.send(result)
-            } else {
-                res.send({ message: "Anime doesent exist" });
-                console.log("Anime doesnt exist");
-            }
-        }
-    )
-})
+app.get("/:id/fav_animes", async (req, res) => {
+  const id = req.params.id;
+  const animes = await getUserFavAnimes(id);
+  res.send(animes);
+});
 
-app.post('/', (req, res) => {
-    const userName = req.body.userName;
-    const sqlQuery = "SELECT * FROM profiles WHERE profile_name = ?";
+app.get("/top_animes", async (req, res) => {
+  const animes = await getTopAnimes(5, 100);
+  res.send(animes);
+});
+app.get("/profiles", async (req, res) => {
+  const profiles = await getProfiles();
+  res.send(profiles);
+});
 
-    db.query(
-        sqlQuery,
-        userName,
-        (err, result) => {
-            if(err) {
-                res.send({err: err})
-            }
-            
-            if(result.length > 0) {
-                res.send(result)
-                console.log(result);
-            } else {
-                res.send({ message: "User doesent exist" });
-                console.log("User doesnt exist");
-            }
-        }
-    )
+app.get("/:anime/score", async (req, res) => {
+  const anime_name = req.params.anime;
+  const score = await getAnimeAvgScroe(anime_name);
+  res.send(score);
+});
 
-})
+app.get("/profile/:id", async (req, res) => {
+  const id = req.params.id;
+  const profile_name = await getProfileName(id);
+  res.send(profile_name);
+});
 
+app.post("/register", async (req, res) => {
+  const { gender, password, birthday, profile_name } = req.body;
+  const result = await createUser(profile_name, gender, birthday, password);
+  let msg = "";
+  if (result == null) {
+    console.log("username taken");
+    msg = "unsucsesfull register :(";
+  } else {
+    console.log("added user!");
+    msg = "sucsesfull register! :)";
+  }
+  res.send({ result: msg });
+});
 
-app.listen(3001, () => {
-    console.log('running on port 3001')
+app.post("/login", async (req, res) => {
+  const username = req.body.username;
+  const password = req.body.password;
+  const result = await check_credentials(username, password);
+  res.send({ result: result });
+});
+
+// error handling
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send("Something broke!");
+});
+
+app.listen(8080, () => {
+  console.log("server is running on 8080");
 });
