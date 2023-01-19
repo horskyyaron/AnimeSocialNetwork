@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors"
 import {
   getProfiles,
   getProfileName,
@@ -16,6 +17,7 @@ import {
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 app.get("/all_genres", async (req, res) => {
   const genres = await getAllGenres();
