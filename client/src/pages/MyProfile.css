@@ -61,6 +61,7 @@
   padding: 1em;
   height: 200px;
   overflow: auto;
+  text-align: left;
 }
 
 .fav_animes_container {

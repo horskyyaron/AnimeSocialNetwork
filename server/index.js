@@ -64,9 +64,9 @@ app.get("/profile/:id", async (req, res) => {
   res.send(profile_name);
 });
 
-app.get("/:profile_name/most_recent", async (req, res) => {
-  const profile_name = req.params.profile_name;
-  const review = await getMostRecentReview(profile_name);
+app.get("/:id/most_recent", async (req, res) => {
+  const id = req.params.id;
+  const review = await getMostRecentReview(id);
   res.send(review);
 });
 

@@ -224,14 +224,21 @@ order by avg_score desc ;
   }
 }
 
-export async function getMostRecentReview(profile_name) {
+export async function getMostRecentReview(profile_id) {
   try {
     const [result] = await connection.query(
       `
-select * from reviews where profile = ? 
-order by uid desc limit 1
+select title,img_url,text from animes
+join (
+select anime_uid,text from reviews 
+join (
+select profile_name from profiles where id = ?
+) as t
+on reviews.profile = t.profile_name
+) as t2
+on anime_uid = uid
     `,
-      [profile_name]
+      [profile_id]
     );
     return result;
   } catch (err) {
