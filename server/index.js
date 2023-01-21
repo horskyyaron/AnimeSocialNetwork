@@ -17,6 +17,7 @@ import {
   getUsersNumberOfReviews,
   getUserTotalFavAnimes,
   add_anime,
+  isAnimeExists,
 } from "./database.js";
 
 const app = express();
@@ -26,6 +27,13 @@ app.use(cors());
 app.get("/all_genres", async (req, res) => {
   const genres = await getAllGenres();
   res.send(genres);
+});
+
+app.get("/:anime/is_exists", async (req, res) => {
+  const anime_name = req.params.anime;
+  const result = await isAnimeExists(anime_name);
+  console.log(result.length);
+  res.send({result: result.length});
 });
 
 app.get("/:id/num_of_reviews", async (req, res) => {

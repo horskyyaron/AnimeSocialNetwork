@@ -366,6 +366,21 @@ select count(*) as total from favorites where profile_id = ?
   }
 }
 
+export async function isAnimeExists(anime_name) {
+  try {
+    const [result] = await connection.query(
+      `
+SELECT * FROM animes WHERE UPPER(title) LIKE UPPER(?)
+`,
+      [anime_name]
+    );
+    return result;
+  } catch (err) {
+    return err;
+  }
+}
+
+
 export async function add_anime(
   anime_name,
   summary,
