@@ -10,3 +10,4 @@ website/backend/drawer
 website/backend/tables_csv/
 connect_to_db
 server/node_modules
+website/.venv

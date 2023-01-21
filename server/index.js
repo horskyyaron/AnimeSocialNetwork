@@ -32,7 +32,6 @@ app.get("/all_genres", async (req, res) => {
 app.get("/:anime/is_exists", async (req, res) => {
   const anime_name = req.params.anime;
   const result = await isAnimeExists(anime_name);
-  console.log(result.length);
   res.send({result: result.length});
 });
 
