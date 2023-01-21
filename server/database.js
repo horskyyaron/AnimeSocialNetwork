@@ -238,7 +238,7 @@ export async function getUserFavAnimes(id) {
 select title, img_url from favorites  
 inner join animes 
 on favorites.fav_anime_id = animes.uid 
-where profile_id = 4 
+where profile_id = ? 
     `,
       [id]
     );
