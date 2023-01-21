@@ -333,3 +333,60 @@ order by num_of_reviews desc limit ?
     return err;
   }
 }
+
+export async function getUsersNumberOfReviews(id) {
+  try {
+    const [result] = await connection.query(
+      `
+select count(*) as total from reviews
+join(
+select profile_name from profiles where id = ?
+) as t
+on reviews.profile = t.profile_name
+`,
+      [id]
+    );
+    return result;
+  } catch (err) {
+    return err;
+  }
+}
+
+export async function getUserTotalFavAnimes(id) {
+  try {
+    const [result] = await connection.query(
+      `
+select count(*) as total from favorites where profile_id = ? 
+`,
+      [id]
+    );
+    return result;
+  } catch (err) {
+    return err;
+  }
+}
+
+export async function add_anime(
+  anime_name,
+  summary,
+  aired_date,
+  end_date,
+  episodes,
+  img_url,
+  anime_genres
+) {
+  try {
+    const [result] = await connection.query(
+      `
+INSERT INTO animes (uid, title, summary, aired, ended, episodes, img_url)
+VALUES (?,?,?,?,?,?,?)
+
+`,
+      [9999999, anime_name, summary, aired_date, end_date, episodes, img_url]
+    );
+    console.log(result);
+    return result;
+  } catch (err) {
+    return err;
+  }
+}

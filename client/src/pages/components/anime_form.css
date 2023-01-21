@@ -1,0 +1,24 @@
+.anime_form {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  /* background-color: red; */
+}
+
+.anime_form ul {
+    list-style-type: none;
+}
+.anime_form li {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.anime_form input {
+    width: 300px;
+}
+
+.anime_form .anime_form_summary {
+    height: 200px;
+    text-align: left;
+}

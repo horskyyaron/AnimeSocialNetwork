@@ -14,6 +14,9 @@ import {
   getMostActiveUsers,
   check_credentials,
   getMostRecentReview,
+  getUsersNumberOfReviews,
+  getUserTotalFavAnimes,
+  add_anime,
 } from "./database.js";
 
 const app = express();
@@ -23,6 +26,12 @@ app.use(cors());
 app.get("/all_genres", async (req, res) => {
   const genres = await getAllGenres();
   res.send(genres);
+});
+
+app.get("/:id/num_of_reviews", async (req, res) => {
+  const id = req.params.id;
+  const total_reviews = await getUsersNumberOfReviews(id);
+  res.send(total_reviews);
 });
 
 // genres should be a string of the following format a,b,c...
@@ -43,8 +52,14 @@ app.get("/:id/fav_animes", async (req, res) => {
   res.send(animes);
 });
 
+app.get("/:id/count_fav_animes", async (req, res) => {
+  const id = req.params.id;
+  const animes = await getUserTotalFavAnimes(id);
+  res.send(animes);
+});
+
 app.get("/top_animes", async (req, res) => {
-  const animes = await getTopAnimes(5, 100);
+  const animes = await getTopAnimes(10, 100);
   res.send(animes);
 });
 app.get("/profiles", async (req, res) => {
@@ -89,6 +104,28 @@ app.post("/login", async (req, res) => {
   const password = req.body.password;
   const result = await check_credentials(username, password);
   res.send({ result: result });
+});
+
+app.post("/add_anime", async (req, res) => {
+  const {
+    anime_name,
+    summary,
+    aired_date,
+    end_date,
+    episodes,
+    img_url,
+    anime_genres,
+  } = req.body;
+  const result = await add_anime(
+    anime_name,
+    summary,
+    aired_date,
+    end_date,
+    episodes,
+    img_url,
+    anime_genres
+  );
+  res.send({ result: "hi" });
 });
 
 // error handling
