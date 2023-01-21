@@ -4,7 +4,7 @@ import FavAnime from "./components/FavAnime.js";
 import "./MyProfile.css";
 
 export default function MyProfile() {
-  const id = 124;
+  const id = 207;
 
   const [fav_animes, error, loading] = useFetch(
     `http://localhost:8080/${id}/fav_animes`

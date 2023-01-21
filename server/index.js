@@ -1,5 +1,5 @@
 import express from "express";
-import cors from "cors"
+import cors from "cors";
 import {
   getProfiles,
   getProfileName,
@@ -13,6 +13,7 @@ import {
   getAnimeByGenreList,
   getMostActiveUsers,
   check_credentials,
+  getMostRecentReview,
 } from "./database.js";
 
 const app = express();
@@ -61,6 +62,12 @@ app.get("/profile/:id", async (req, res) => {
   const id = req.params.id;
   const profile_name = await getProfileName(id);
   res.send(profile_name);
+});
+
+app.get("/:profile_name/most_recent", async (req, res) => {
+  const profile_name = req.params.profile_name;
+  const review = await getMostRecentReview(profile_name);
+  res.send(review);
 });
 
 app.post("/register", async (req, res) => {

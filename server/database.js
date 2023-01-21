@@ -153,7 +153,7 @@ export async function check_credentials(username, password) {
     let res = true;
     if (result.length == 0) {
       console.log("doesn't exits!");
-            res = false
+      res = false;
     } else {
       console.log("exits!");
     }
@@ -224,6 +224,20 @@ order by avg_score desc ;
   }
 }
 
+export async function getMostRecentReview(profile_name) {
+  try {
+    const [result] = await connection.query(
+      `
+select * from reviews where profile = ? 
+order by uid desc limit 1
+    `,
+      [profile_name]
+    );
+    return result;
+  } catch (err) {
+    return err;
+  }
+}
 /**
  * return useres favorite animes.
  *
