@@ -5,7 +5,7 @@ import AddAnimeForm from "./components/AddAnimeForm.js";
 import "./MyProfile.css";
 
 export default function MyProfile() {
-    const id = 310;
+    const id = 207;
 
     const [anime_form, setAnimeForm] = useState(false);
 

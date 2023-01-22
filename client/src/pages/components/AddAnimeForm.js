@@ -1,9 +1,10 @@
 import "./anime_form.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 
 // export default function AddAnimeForm({ genres, onAnimeAdd }) {
 export default function AddAnimeForm({ genres }) {
+  const [shouldCheckAnime, setShouldAnimeCheck] = useState(false);
   const [anime_name, setAnimeName] = useState("");
   const [summary, setSummary] = useState("");
   const [aired_date, setAiredDate] = useState("");
@@ -19,32 +20,56 @@ export default function AddAnimeForm({ genres }) {
     "none",
   ]);
 
+  useEffect(() => {
+    if (shouldCheckAnime) {
+      (async () => {
+        const result = await axios.get(
+          `http://localhost:8080/${anime_name}/is_exists`
+        );
+        if (result.data["result"] > 0) {
+          console.log("anime exits!");
+        } else {
+          console.log("new anime!!!");
+        }
+      })();
+      setShouldAnimeCheck(false);
+    } else {
+      console.log("use effect: not checking anime");
+    }
+  }, [shouldCheckAnime]);
+
   // checks the input of the form before submitting
-  const isInputOk = () => {
+  const isInputOk = async () => {
+    // const is_exists = await axios.get(
+    //   `http:localhost:8080/${anime_name}/is_exists`
+    // );
+    // console.log("is_exits", is_exists.data);
     return true;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isInputOk()) {
-      console.log("good! making post setEpisodes");
-      const result = await axios.post("http://localhost:8080/add_anime", {
-        anime_name,
-        summary,
-        aired_date,
-        end_date,
-        episodes,
-        img_url,
-        anime_genres: anime_genres.filter((g) => {
-          if (g != "none") {
-            return g;
-          }
-        }),
-      });
-      console.log(result);
-    } else {
-      console.log("bad, see errors.");
-    }
+    setShouldAnimeCheck(true);
+    // console.log(isInputOk());
+    // if (await isInputOk()) {
+    //   console.log("good! making post setEpisodes");
+    // const result = await axios.post("http://localhost:8080/add_anime", {
+    //   anime_name,
+    //   summary,
+    //   aired_date,
+    //   end_date,
+    //   episodes,
+    //   img_url,
+    //   anime_genres: anime_genres.filter((g) => {
+    //     if (g != "none") {
+    //       return g;
+    //     }
+    //   }),
+    // });
+    // console.log(result);
+    // } else {
+    //   console.log("bad, see errors.");
+    // }
   };
 
   const handleGenreChange = (e) => {
