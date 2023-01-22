@@ -16,6 +16,7 @@ import {
   getMostRecentReview,
   getUsersNumberOfReviews,
   getUserTotalFavAnimes,
+  getLastAnimeId,
   add_anime,
   isAnimeExists,
 } from "./database.js";
@@ -32,7 +33,7 @@ app.get("/all_genres", async (req, res) => {
 app.get("/:anime/is_exists", async (req, res) => {
   const anime_name = req.params.anime;
   const result = await isAnimeExists(anime_name);
-  res.send({result: result.length});
+  res.send({ result: result.length });
 });
 
 app.get("/:id/num_of_reviews", async (req, res) => {
@@ -86,6 +87,12 @@ app.get("/profile/:id", async (req, res) => {
   res.send(profile_name);
 });
 
+app.get("/profiles/last_id", async (req, res) => {
+  const last_anime_id = await getLastAnimeId();
+  res.send({last_id: last_anime_id[0]["uid"]});
+  // res.send({ last_id: last_profile[0]["id"] });
+});
+
 app.get("/:id/most_recent", async (req, res) => {
   const id = req.params.id;
   const review = await getMostRecentReview(id);
@@ -114,15 +121,8 @@ app.post("/login", async (req, res) => {
 });
 
 app.post("/add_anime", async (req, res) => {
-  const {
-    anime_name,
-    summary,
-    aired_date,
-    end_date,
-    episodes,
-    img_url,
-    anime_genres,
-  } = req.body;
+  const { anime_name, summary, aired_date, end_date, episodes, img_url, id } =
+    req.body;
   const result = await add_anime(
     anime_name,
     summary,
@@ -130,9 +130,9 @@ app.post("/add_anime", async (req, res) => {
     end_date,
     episodes,
     img_url,
-    anime_genres
+    id
   );
-  res.send({ result: "hi" });
+  res.send(result);
 });
 
 // error handling

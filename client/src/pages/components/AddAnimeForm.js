@@ -1,10 +1,12 @@
 import "./anime_form.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { color } from "@mui/system";
 
 // export default function AddAnimeForm({ genres, onAnimeAdd }) {
 export default function AddAnimeForm({ genres }) {
   const [shouldCheckAnime, setShouldAnimeCheck] = useState(false);
+  const [anime_exists, setAnimeExists] = useState(false);
   const [anime_name, setAnimeName] = useState("");
   const [summary, setSummary] = useState("");
   const [aired_date, setAiredDate] = useState("");
@@ -23,28 +25,60 @@ export default function AddAnimeForm({ genres }) {
   useEffect(() => {
     if (shouldCheckAnime) {
       (async () => {
+        let is_exits = false;
+        let is_dates_ok = false;
         const result = await axios.get(
           `http://localhost:8080/${anime_name}/is_exists`
         );
         if (result.data["result"] > 0) {
+          is_exits = true;
           console.log("anime exits!");
+          setAnimeExists(true);
+          return;
         } else {
           console.log("new anime!!!");
         }
+        if (end_date == "") {
+          is_dates_ok = Date.parse(Date()) >= Date.parse(aired_date);
+        } else {
+          is_dates_ok = Date.parse(aired_date) < Date.parse(end_date);
+        }
+
+        console.log("dates ok:", is_dates_ok, "anime exits:", is_exits);
+        if (!is_exits && is_dates_ok) {
+          console.log("can add this anime");
+          const last_id = await axios.get(
+            `http://localhost:8080/profiles/last_id`
+          );
+          const new_id = last_id.data.last_id + 1;
+          post_new_anime(new_id);
+        } else {
+          console.log("can't add this anime");
+        }
       })();
-      setShouldAnimeCheck(false);
     } else {
       console.log("use effect: not checking anime");
     }
+    setShouldAnimeCheck(false);
   }, [shouldCheckAnime]);
 
-  // checks the input of the form before submitting
-  const isInputOk = async () => {
-    // const is_exists = await axios.get(
-    //   `http:localhost:8080/${anime_name}/is_exists`
-    // );
-    // console.log("is_exits", is_exists.data);
-    return true;
+  const post_new_anime = async (id) => {
+    console.log("posting anime");
+    const result = await axios.post("http://localhost:8080/add_anime", {
+      anime_name,
+      summary,
+      aired_date,
+      end_date: end_date ? end_date : "NULL",
+      episodes,
+      img_url,
+      id,
+      // anime_genres: anime_genres.filter((g) => {
+      //   if (g != "none") {
+      //     return g;
+      //   }
+      // }),
+    });
+    console.log(result);
   };
 
   const handleSubmit = async (e) => {
@@ -53,23 +87,6 @@ export default function AddAnimeForm({ genres }) {
     // console.log(isInputOk());
     // if (await isInputOk()) {
     //   console.log("good! making post setEpisodes");
-    // const result = await axios.post("http://localhost:8080/add_anime", {
-    //   anime_name,
-    //   summary,
-    //   aired_date,
-    //   end_date,
-    //   episodes,
-    //   img_url,
-    //   anime_genres: anime_genres.filter((g) => {
-    //     if (g != "none") {
-    //       return g;
-    //     }
-    //   }),
-    // });
-    // console.log(result);
-    // } else {
-    //   console.log("bad, see errors.");
-    // }
   };
 
   const handleGenreChange = (e) => {
@@ -91,9 +108,20 @@ export default function AddAnimeForm({ genres }) {
               type="text"
               id="anime_name"
               placeholder="anime name"
-              onChange={(e) => setAnimeName(e.target.value)}
+              onChange={(e) => {
+                setAnimeName(e.target.value);
+                setAnimeExists(false);
+              }}
+              required
             />
           </li>
+          {anime_exists ? (
+            <li style={{ color: "red" }}>
+              <b>anime exists!</b>
+            </li>
+          ) : (
+            ""
+          )}
           <li>
             <label>anime summary:</label>
             <textarea
@@ -101,6 +129,7 @@ export default function AddAnimeForm({ genres }) {
               placeholder=""
               maxLength="3000"
               minLength="20"
+              required
             ></textarea>
           </li>
           <li>
@@ -109,6 +138,7 @@ export default function AddAnimeForm({ genres }) {
               type="date"
               placeholder=""
               onChange={(e) => setAiredDate(e.target.value)}
+              required
             />
           </li>
           <li>
@@ -126,16 +156,25 @@ export default function AddAnimeForm({ genres }) {
               minLength="1"
               maxLength="3000"
               onChange={(e) => setEpisodes(e.target.value)}
+              required
             />
           </li>
           <li>
             <label>picture url</label>
-            <input type="text" onChange={(e) => setImgUrl(e.target.value)} />
+            <input
+              type="text"
+              onChange={(e) => setImgUrl(e.target.value)}
+              required
+            />
           </li>
           <li>
-            <label>Anime genre (can choose multiple)</label>
-            <select name="genre1" id="pet-select1" onChange={handleGenreChange}>
-              <option value="none">none</option>
+            <label>Anime genre (as least one genre)</label>
+            <select
+              name="genre1"
+              id="genre-select1"
+              onChange={handleGenreChange}
+              required
+            >
               {genres.map((g) => (
                 <option value={g.genre_name}>{g.genre_name}</option>
               ))}

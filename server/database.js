@@ -380,6 +380,18 @@ SELECT * FROM animes WHERE UPPER(title) LIKE UPPER(?)
   }
 }
 
+export async function getLastAnimeId() {
+  try {
+    const [result] = await connection.query(
+      `
+select uid from animes order by uid desc limit 1
+`
+    );
+    return result;
+  } catch (err) {
+    return err;
+  }
+}
 
 export async function add_anime(
   anime_name,
@@ -388,20 +400,41 @@ export async function add_anime(
   end_date,
   episodes,
   img_url,
-  anime_genres
+  id
 ) {
+  let vars;
+  if (end_date != "NULL") {
+    vars = [
+      id,
+      anime_name,
+      summary,
+      aired_date,
+      end_date,
+      parseInt(episodes),
+      img_url,
+    ];
+  } else {
+    vars = [
+      id,
+      anime_name,
+      summary,
+      aired_date,
+      parseInt(episodes),
+      img_url,
+    ];
+  }
   try {
     const [result] = await connection.query(
       `
 INSERT INTO animes (uid, title, summary, aired, ended, episodes, img_url)
-VALUES (?,?,?,?,?,?,?)
-
+${end_date == "NULL" ? "VALUES (?,?,?,?,NULL,?,?)" : "VALUES (?,?,?,?,?,?,?)"}
 `,
-      [9999999, anime_name, summary, aired_date, end_date, episodes, img_url]
+      vars
     );
-    console.log(result);
-    return result;
+    console.log("anime added to db");
+    return { result: "anime added" };
   } catch (err) {
-    return err;
+    console.log("something went wrong in query", err);
+    return { err: err };
   }
 }
