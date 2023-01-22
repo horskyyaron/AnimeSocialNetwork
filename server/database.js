@@ -380,6 +380,28 @@ SELECT * FROM animes WHERE UPPER(title) LIKE UPPER(?)
   }
 }
 
+export async function addAnimeGenres(id, genres) {
+  const results = [];
+  const insert = async () => {
+    genres.forEach(async (g) => {
+      try {
+        const [result] = await connection.query(
+          `
+insert into anime_genre (anime_id, genre_name)
+    values(?,?)
+  `,
+          [id, g]
+        );
+        results.push(result);
+      } catch (err) {
+        results.push(err);
+      }
+    });
+  };
+  const result = await insert();
+  console.log(result);
+}
+
 export async function getLastAnimeId() {
   try {
     const [result] = await connection.query(
@@ -414,14 +436,7 @@ export async function add_anime(
       img_url,
     ];
   } else {
-    vars = [
-      id,
-      anime_name,
-      summary,
-      aired_date,
-      parseInt(episodes),
-      img_url,
-    ];
+    vars = [id, anime_name, summary, aired_date, parseInt(episodes), img_url];
   }
   try {
     const [result] = await connection.query(

@@ -64,21 +64,32 @@ export default function AddAnimeForm({ genres }) {
 
   const post_new_anime = async (id) => {
     console.log("posting anime");
-    const result = await axios.post("http://localhost:8080/add_anime", {
-      anime_name,
-      summary,
-      aired_date,
-      end_date: end_date ? end_date : "NULL",
-      episodes,
-      img_url,
-      id,
-      // anime_genres: anime_genres.filter((g) => {
-      //   if (g != "none") {
-      //     return g;
-      //   }
-      // }),
-    });
-    console.log(result);
+    const result_add_anime = await axios.post(
+      "http://localhost:8080/add_anime",
+      {
+        anime_name,
+        summary,
+        aired_date,
+        end_date: end_date ? end_date : "NULL",
+        episodes,
+        img_url,
+        id,
+      }
+    );
+
+    console.log("adding anime genres");
+    const result_add_anime_genres = await axios.post(
+      "http://localhost:8080/update_genres",
+      {
+        anime_id: id,
+        anime_genres: [...new Set(anime_genres)].filter((g) => {
+          if (g != "none") {
+            return g;
+          }
+        }),
+      }
+    );
+    console.log(result_add_anime_genres);
   };
 
   const handleSubmit = async (e) => {
@@ -90,7 +101,6 @@ export default function AddAnimeForm({ genres }) {
   };
 
   const handleGenreChange = (e) => {
-    console.log(anime_genres);
     const i = parseInt(e.target.name.slice(-1));
     const copy = [...anime_genres];
     copy[i - 1] = e.target.value;

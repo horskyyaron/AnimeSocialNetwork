@@ -19,6 +19,7 @@ import {
   getLastAnimeId,
   add_anime,
   isAnimeExists,
+  addAnimeGenres,
 } from "./database.js";
 
 const app = express();
@@ -89,14 +90,23 @@ app.get("/profile/:id", async (req, res) => {
 
 app.get("/profiles/last_id", async (req, res) => {
   const last_anime_id = await getLastAnimeId();
-  res.send({last_id: last_anime_id[0]["uid"]});
-  // res.send({ last_id: last_profile[0]["id"] });
+  res.send({ last_id: last_anime_id[0]["uid"] });
 });
 
 app.get("/:id/most_recent", async (req, res) => {
   const id = req.params.id;
   const review = await getMostRecentReview(id);
   res.send(review);
+});
+
+app.post("/update_genres", async (req, res) => {
+  const { anime_id, anime_genres } = req.body;
+  const result = await addAnimeGenres(anime_id, anime_genres);
+  res.send({ result: result });
+
+  // const result = await addAnimeGenres(anime_genres);
+  // console.log(result);
+  // res.send({ result: msg });
 });
 
 app.post("/register", async (req, res) => {
