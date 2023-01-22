@@ -33,6 +33,10 @@ export default function MyProfile() {
     setAnimeForm(true);
   };
 
+  const handleNewAnimeSubmitted = () => {
+    setAnimeForm(false);
+  };
+
   // const handleAnimeAddition = (anime_data) => {
   //   console.log("adding anime!");
   //   console.log(anime_data);
@@ -69,7 +73,7 @@ export default function MyProfile() {
                   onClick={handleAddAnimeButtonClicked}
                   className="add_anime"
                 >
-                  add anime
+                  add new anime
                 </button>
               </li>
             </ul>
@@ -114,7 +118,12 @@ export default function MyProfile() {
     );
   } else {
     // return <AddAnimeForm genres={genres} onAnimeAdd={handleAnimeAddition} />;
-    return <AddAnimeForm genres={genres} />;
+    return (
+      <AddAnimeForm
+        genres={genres}
+        onSubmitNewAnime={handleNewAnimeSubmitted}
+      />
+    );
   }
 }
 

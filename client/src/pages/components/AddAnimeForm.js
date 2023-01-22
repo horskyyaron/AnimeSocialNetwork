@@ -4,7 +4,7 @@ import axios from "axios";
 import { color } from "@mui/system";
 
 // export default function AddAnimeForm({ genres, onAnimeAdd }) {
-export default function AddAnimeForm({ genres }) {
+export default function AddAnimeForm({ genres, onSubmitNewAnime }) {
   const [shouldCheckAnime, setShouldAnimeCheck] = useState(false);
   const [anime_exists, setAnimeExists] = useState(false);
   const [anime_name, setAnimeName] = useState("");
@@ -63,7 +63,6 @@ export default function AddAnimeForm({ genres }) {
   }, [shouldCheckAnime]);
 
   const post_new_anime = async (id) => {
-    console.log("posting anime");
     const result_add_anime = await axios.post(
       "http://localhost:8080/add_anime",
       {
@@ -77,7 +76,6 @@ export default function AddAnimeForm({ genres }) {
       }
     );
 
-    console.log("adding anime genres");
     const result_add_anime_genres = await axios.post(
       "http://localhost:8080/update_genres",
       {
@@ -89,7 +87,11 @@ export default function AddAnimeForm({ genres }) {
         }),
       }
     );
-    console.log(result_add_anime_genres);
+
+    onSubmitNewAnime();
+  };
+  const cancelAddNewAnimeForm = () => {
+    onSubmitNewAnime();
   };
 
   const handleSubmit = async (e) => {
@@ -241,7 +243,8 @@ export default function AddAnimeForm({ genres }) {
             </select>
           </li>
         </ul>
-        <button type="submit">Add anime</button>
+        <button type="submit">Add new anime</button>
+        <button onClick={cancelAddNewAnimeForm}>back</button>
       </form>
     </div>
   );
