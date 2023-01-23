@@ -54,6 +54,22 @@ export async function getProfileName(id) {
   }
 }
 
+export async function updateUserReview(rev_id, score, rev_text) {
+  try {
+    const [result] = await connection.query(
+      `
+  UPDATE reviews
+  SET text = ?, score = ?
+  WHERE uid = ?
+      `,
+      [rev_text, score, rev_id]
+    );
+    return { result: result, update_status: "ok" };
+  } catch (err) {
+    return { result: result, update_status: "error" };
+  }
+}
+
 /**
  * return number of users in the database.
  *

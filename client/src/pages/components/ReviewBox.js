@@ -2,7 +2,14 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import "./review_box.css";
 
-export default function ReviewBox({ profile, rev_id, title, img_url, score, rev_text }) {
+export default function ReviewBox({
+  profile,
+  rev_id,
+  title,
+  img_url,
+  score,
+  rev_text,
+}) {
   const [edit_dialog, setEditDialog] = useState(false);
   const [shouldUpdate, setShouldUpdate] = useState(false);
   const [rev_update_text, setRevUpdateText] = useState(rev_text);
@@ -32,11 +39,15 @@ export default function ReviewBox({ profile, rev_id, title, img_url, score, rev_
   const updateReviewInDb = async (id) => {
     console.log("sending to db");
 
-    const result = await axios.post("http://localhost:8080/update_review", {
-      rev_id,
-      rev_update_score,
-      rev_update_text,
-    });
+    const result = await axios.post(
+      "http://localhost:8080/update_review",
+      {
+        rev_id,
+        rev_update_score,
+        rev_update_text,
+      }
+    );
+    console.log(result);
   };
 
   if (!edit_dialog) {

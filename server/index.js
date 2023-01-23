@@ -21,6 +21,7 @@ import {
   add_anime,
   isAnimeExists,
   addAnimeGenres,
+  updateUserReview,
 } from "./database.js";
 
 const app = express();
@@ -113,10 +114,13 @@ app.post("/update_genres", async (req, res) => {
 });
 
 app.post("/update_review", async (req, res) => {
-  const { rev_id, score, rev_text } = req.body;
-  console.log(req.body);
-  // const result = await updateUserReview(rev_id, score, rev_text);
-  res.send({ result: "hi" });
+  const { rev_id, rev_update_score, rev_update_text } = req.body;
+  const result = await updateUserReview(
+    rev_id,
+    rev_update_score,
+    rev_update_text
+  );
+  res.send(result);
 });
 
 app.post("/register", async (req, res) => {
