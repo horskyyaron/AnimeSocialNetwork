@@ -3,19 +3,52 @@ import axios from "axios";
 
 import ReviewBox from "./ReviewBox.js";
 
-export default function EditMyReview({ onCancel }) {
-  const profile = "Crystal";
+export default function EditReviews({ onCancel }) {
+  const profile = "-Melancholy-";
 
-  const [reviews, error, loading] = useFetch(
-    `http://localhost:8080/${profile}/get_reviews`
-  );
+  const [refreshPage, setRefreshPage] = useState(false);
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  if (!loading) {
-    console.log(reviews["reviews"]);
-  }
+  useEffect(() => {
+    setRefreshPage(false)
+    const controller = new AbortController();
+    (async () => {
+      setError(false);
+      setLoading(true);
+      try {
+        const result = await axios.get(
+          ` http://localhost:8080/${profile}/get_reviews`,
+          { signal: controller.signal }
+        ); //fetching data from server
+        setReviews(result.data["reviews"]); //updating the jokes array state, which will rerender the component.
+      } catch (error) {
+        if (axios.isCancel(error)) {
+          return;
+        }
+        setError(true);
+      }
+      setLoading(false);
+
+      //cleanup
+      return () => {
+        controller.abort();
+      };
+    })(); // IIFE
+  }, [refreshPage]);
 
   const handleCancel = () => {
     onCancel();
+  };
+
+  const handleUpdate = async (text, score, rev_id) => {
+    const result = await axios.post("http://localhost:8080/update_review", {
+      text,
+      score,
+      rev_id,
+    });
+    setRefreshPage(true);
   };
 
   return (
@@ -25,7 +58,7 @@ export default function EditMyReview({ onCancel }) {
       <div className="reviews_container">
         {loading
           ? "loading..."
-          : reviews["reviews"].map((r) => {
+          : reviews.map((r) => {
               return (
                 <ReviewBox
                   profile={r.profile}
@@ -34,40 +67,11 @@ export default function EditMyReview({ onCancel }) {
                   img_url={r.img_url}
                   score={r.score}
                   rev_text={r.text}
+                  updateDb={handleUpdate}
                 />
               );
             })}
       </div>
     </>
   );
-
-  function useFetch(url) {
-    const [data, setData] = useState([]);
-    const [error, setError] = useState(false);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-      const controller = new AbortController();
-      (async () => {
-        setError(false);
-        // setLoading(true);
-        try {
-          const result = await axios.get(url, { signal: controller.signal }); //fetching data from server
-          setData(result.data); //updating the jokes array state, which will rerender the component.
-        } catch (error) {
-          if (axios.isCancel(error)) {
-            return;
-          }
-          setError(true);
-        }
-        setLoading(false);
-
-        //cleanup
-        return () => {
-          controller.abort();
-        };
-      })(); // IIFE
-    }, []);
-    return [data, error, loading];
-  }
 }

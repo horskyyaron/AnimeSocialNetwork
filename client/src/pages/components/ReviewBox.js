@@ -9,6 +9,7 @@ export default function ReviewBox({
   img_url,
   score,
   rev_text,
+  updateDb,
 }) {
   const [edit_dialog, setEditDialog] = useState(false);
   const [shouldUpdate, setShouldUpdate] = useState(false);
@@ -24,33 +25,20 @@ export default function ReviewBox({
     setRevUpdateScore(score);
     setEditDialog(false);
   };
-  const handleSubmit = (e) => {
+  const handleEditReviewSubmit = (e) => {
     e.preventDefault();
     setShouldUpdate(true);
   };
 
   useEffect(() => {
     if (shouldUpdate) {
-      console.log("should update");
-      updateReviewInDb();
+      updateDb(rev_update_text, rev_update_score, rev_id);
+      setEditDialog(false);
     }
   }, [shouldUpdate]);
 
-  const updateReviewInDb = async (id) => {
-    console.log("sending to db");
-
-    const result = await axios.post(
-      "http://localhost:8080/update_review",
-      {
-        rev_id,
-        rev_update_score,
-        rev_update_text,
-      }
-    );
-    console.log(result);
-  };
-
   if (!edit_dialog) {
+    console.log("original score" + score);
     return (
       <div className="review_box">
         <div className="left">
@@ -71,7 +59,7 @@ export default function ReviewBox({
   } else {
     return (
       <div className="edit_review">
-        <form onSubmit={handleSubmit} className="edit_rev_form">
+        <form onSubmit={handleEditReviewSubmit} className="edit_rev_form">
           <h3>review:</h3>
           <textarea
             onChange={(e) => setRevUpdateText(e.target.value)}

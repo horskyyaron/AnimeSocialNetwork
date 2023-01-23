@@ -54,7 +54,7 @@ export async function getProfileName(id) {
   }
 }
 
-export async function updateUserReview(rev_id, score, rev_text) {
+export async function updateUserReview(rev_text, score, rev_id) {
   try {
     const [result] = await connection.query(
       `

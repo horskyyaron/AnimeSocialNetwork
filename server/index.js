@@ -114,11 +114,11 @@ app.post("/update_genres", async (req, res) => {
 });
 
 app.post("/update_review", async (req, res) => {
-  const { rev_id, rev_update_score, rev_update_text } = req.body;
+  const { text, score, rev_id } = req.body;
   const result = await updateUserReview(
-    rev_id,
-    rev_update_score,
-    rev_update_text
+    text,
+    score,
+    rev_id
   );
   res.send(result);
 });
