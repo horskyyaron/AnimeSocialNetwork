@@ -240,7 +240,8 @@ export async function getTopAnimes(k, min_rev) {
   try {
     const [result] = await connection.query(
       `
-select title, avg_score, img_url from (select anime_uid, avg_score from(select anime_uid,COUNT(DISTINCT(profile)) as times_reviewed, AVG(score) as avg_score  
+select title, avg_score, img_url from 
+(select anime_uid, avg_score from(select anime_uid,COUNT(DISTINCT(profile)) as times_reviewed, AVG(score) as avg_score  
 FROM reviews  
 GROUP BY anime_uid  
 having times_reviewed > ? 
