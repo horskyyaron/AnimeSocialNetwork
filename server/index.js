@@ -11,6 +11,7 @@ import {
   getUserFavAnimes,
   getAllGenres,
   getAnimeByGenreList,
+  getUserReviews,
   getMostActiveUsers,
   check_credentials,
   getMostRecentReview,
@@ -93,6 +94,12 @@ app.get("/profiles/last_id", async (req, res) => {
   res.send({ last_id: last_anime_id[0]["uid"] });
 });
 
+app.get("/:profile/get_reviews", async (req, res) => {
+  const profile = req.params.profile;
+  const result = await getUserReviews(profile);
+  res.send({ reviews: result });
+});
+
 app.get("/:id/most_recent", async (req, res) => {
   const id = req.params.id;
   const review = await getMostRecentReview(id);
@@ -103,10 +110,13 @@ app.post("/update_genres", async (req, res) => {
   const { anime_id, anime_genres } = req.body;
   const result = await addAnimeGenres(anime_id, anime_genres);
   res.send({ result: result });
+});
 
-  // const result = await addAnimeGenres(anime_genres);
-  // console.log(result);
-  // res.send({ result: msg });
+app.post("/update_review", async (req, res) => {
+  const { rev_id, score, rev_text } = req.body;
+  console.log(req.body);
+  // const result = await updateUserReview(rev_id, score, rev_text);
+  res.send({ result: "hi" });
 });
 
 app.post("/register", async (req, res) => {

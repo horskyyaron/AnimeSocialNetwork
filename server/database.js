@@ -73,6 +73,25 @@ export async function getNumOfUsers() {
   }
 }
 
+export async function getUserReviews(profile) {
+  try {
+    // [rows] - the first item out of the result array. destructuring assignment.
+    const [result] = await connection.query(
+      `
+select profile,reviews.uid as rev_id,title,img_url,score,text from reviews
+join animes
+on reviews.anime_uid = animes.uid
+where profile=?
+
+    `,
+      [profile]
+    );
+    return result;
+  } catch (err) {
+    return err;
+  }
+}
+
 /**
  * checks if username exists in database.
  *

@@ -1,0 +1,99 @@
+.review_box {
+  display: flex;
+}
+
+.review_box .img_container {
+  width: 300px;
+}
+
+.review_box .left {
+  display: flex;
+  flex-direction: column;
+  margin-right: 40px;
+  padding: 1em;
+  border-style: groove;
+  border-color: black;
+}
+
+.review_box .img_container img {
+  max-height: 100%;
+  max-width: 100%;
+}
+
+.review_box .review {
+  border-style: solid;
+  border-radius: 10px;
+  padding: 1em;
+  height: 400px;
+  overflow: auto;
+  text-align: left;
+  white-space: pre-wrap;
+  margin-right: 50px;
+}
+
+.review_box {
+  margin-bottom: 30px;
+}
+
+.review_box button {
+  display: inline-block;
+  border-radius: 4px;
+  background-color: gray;
+  border: none;
+  color: #ffffff;
+  text-align: center;
+  font-size: 20px;
+  padding: 20px;
+  width: 200px;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 5px;
+  border-radius: 10px;
+}
+
+.review_box button span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+.review_box button span:after {
+  content: "\00bb";
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+.review_box button:hover span {
+  padding-right: 25px;
+}
+
+.review_box button:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+
+.edit_review .edit_rev_form {
+  border-style: solid;
+  border-color: blue;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+  margin: 30px 300px;
+}
+
+.edit_review textarea {
+  width: 50%;
+  height: 150px;
+  padding: 12px 20px;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  background-color: #f8f8f8;
+  font-size: 16px;
+  resize: none;
+}

@@ -10,7 +10,9 @@ ANIME_GENRE_HEADER = "(anime_id, genre_name) "
 ANIME_GENRE_HEADER_TYPES = ["int", "str"]
 ANIME_GENRE_QUERY = """CREATE TABLE anime_genre (
     anime_id INT,
-    genre_name VARCHAR(255)
+    genre_name VARCHAR(255),
+    primary key(anime_id, genre_name)
+    
 ); 
 """
 
@@ -24,7 +26,8 @@ ANIMES_QUERY = """CREATE TABLE animes (
     aired DATE,
     ended DATE,
     episodes INT,
-    img_url VARCHAR(255)
+    img_url VARCHAR(255),
+    primary key(uid)
 );
 """
 
@@ -34,7 +37,8 @@ FAVS_HEADER = "(profile_id, fav_anime_id) "
 FAVS_HEADER_TYPES = ["int", "int"]
 FAVS_QUERY = """CREATE TABLE favorites (
     profile_id INT,
-    fav_anime_id INT
+    fav_anime_id INT,
+    primary key (profile_id, fav_anime_id)
 ); 
 """
 
@@ -47,7 +51,8 @@ PROFILES_QUERY = """CREATE TABLE profiles (
     profile_name VARCHAR(255),
     password VARCHAR(255),
     gender VARCHAR(255),
-    birthday DATE
+    birthday DATE,
+    primary key (profile_name)
 ); 
 """
 
@@ -59,7 +64,8 @@ REVIEWS_QUERY = """CREATE TABLE reviews (
     profile VARCHAR(255),
     anime_uid INT,
     text TEXT,
-    score INT
+    score INT,
+    primary key(uid)
 ); 
 """
 

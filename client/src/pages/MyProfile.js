@@ -2,12 +2,14 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import FavAnime from "./components/FavAnime.js";
 import AddAnimeForm from "./components/AddAnimeForm.js";
+import EditMyReview from "./components/EditMyReview.js";
 import "./MyProfile.css";
 
 export default function MyProfile() {
   const id = 310;
 
   const [anime_form, setAnimeForm] = useState(false);
+  const [edit_form, setEditForm] = useState(false);
 
   const [fav_animes, error, loading] = useFetch(
     `http://localhost:8080/${id}/fav_animes`
@@ -33,8 +35,15 @@ export default function MyProfile() {
     setAnimeForm(true);
   };
 
+  const handleEditMyReviewClicked = () => {
+    setEditForm(true);
+  };
+
   const handleNewAnimeSubmitted = () => {
     setAnimeForm(false);
+  };
+  const handleCancelEditReviews = () => {
+    setEditForm(false);
   };
 
   // const handleAnimeAddition = (anime_data) => {
@@ -43,79 +52,89 @@ export default function MyProfile() {
   // };
 
   if (!anime_form) {
-    return (
-      <>
-        <nav className="my_profile_navbar">
-          <div className="container">
-            <div className="user_name">
-              {loading2 ? (
-                <h1>loading...</h1>
-              ) : (
-                <h1>{user_name[0].profile_name}</h1>
-              )}
+    if (edit_form) {
+      return <EditMyReview onCancel={handleCancelEditReviews} />;
+    } else {
+      return (
+        <>
+          <nav className="my_profile_navbar">
+            <div className="container">
+              <div className="user_name">
+                {loading2 ? (
+                  <h1>loading...</h1>
+                ) : (
+                  <h1>{user_name[0].profile_name}</h1>
+                )}
+              </div>
+              <ul>
+                <li>#Reviews: {loading4 ? "hi" : total_reviews[0].total}</li>
+                <li>
+                  #Favorites animes:{" "}
+                  {loading5 ? "hi" : total_fav_animes[0].total}
+                </li>
+              </ul>
             </div>
-            <ul>
-              <li>#Reviews: {loading4 ? "hi" : total_reviews[0].total}</li>
-              <li>
-                #Favorites animes: {loading5 ? "hi" : total_fav_animes[0].total}
-              </li>
-            </ul>
-          </div>
-        </nav>
-        <div className="interactive_section">
-          <div className="container">
-            <ul>
-              <li>
-                <button className="add_rev">add review</button>
-              </li>
-              <li>
-                <button
-                  onClick={handleAddAnimeButtonClicked}
-                  className="add_anime"
-                >
-                  add new anime
-                </button>
-              </li>
-            </ul>
-            <div className="latest_review">
-              <h3>most recent review: </h3>
-              {loading3 ? (
-                <h1>loading</h1>
-              ) : (
-                <div>
-                  <ul>
-                    <li></li>
-                    <li>
-                      anime: <b>{most_recent_rev[0].title}</b>
-                    </li>
-                    <li>
-                      <img src={most_recent_rev[0].img_url} alt="" />
-                    </li>
-                    <li>
-                      <b>{most_recent_rev[0].text}</b>
-                    </li>
-                  </ul>
-                </div>
-              )}
+          </nav>
+          <div className="interactive_section">
+            <div className="container">
+              <ul>
+                <li>
+                  <button
+                    className="add_rev"
+                    onClick={handleEditMyReviewClicked}
+                  >
+                    add review
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={handleAddAnimeButtonClicked}
+                    className="add_anime"
+                  >
+                    add new anime
+                  </button>
+                </li>
+              </ul>
+              <div className="latest_review">
+                <h3>most recent review: </h3>
+                {loading3 ? (
+                  <h1>loading</h1>
+                ) : (
+                  <div>
+                    <ul>
+                      <li></li>
+                      <li>
+                        anime: <b>{most_recent_rev[0].title}</b>
+                      </li>
+                      <li>
+                        <img src={most_recent_rev[0].img_url} alt="" />
+                      </li>
+                      <li>
+                        <b>{most_recent_rev[0].text}</b>
+                      </li>
+                    </ul>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        </div>
-        <h1>Favorite animes</h1>
-        {loading ? (
-          <h1>loading...</h1>
-        ) : (
-          <div className="fav_animes_container">
-            {fav_animes.map((anime) => (
-              <FavAnime
-                title={anime.title}
-                img_url={anime.img_url}
-                key={anime.title}
-              />
-            ))}
-          </div>
-        )}
-      </>
-    );
+          <h1>Favorite animes</h1>
+          {loading ? (
+            <h1>loading...</h1>
+          ) : (
+            <div className="fav_animes_container">
+              {fav_animes.map((anime) => (
+                <FavAnime
+                  title={anime.title}
+                  img_url={anime.img_url}
+                  key={anime.title}
+                />
+              ))}
+            </div>
+          )}
+        </>
+      );
+    }
   } else {
     // return <AddAnimeForm genres={genres} onAnimeAdd={handleAnimeAddition} />;
     return (
