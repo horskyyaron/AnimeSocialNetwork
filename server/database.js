@@ -28,6 +28,19 @@ export async function getProfiles() {
   }
 }
 
+export async function getUserId(profile_name) {
+  try {
+    // [rows] - the first item out of the result array. destructuring assignment.
+    const [result] = await connection.query(
+      "select id from profiles where profile_name = ?",
+      [profile_name]
+    );
+    return {result: result, error: "no"};
+  } catch (err) {
+    return {result: err, error: "yes"};
+  }
+}
+
 export async function getAllAnimesNames() {
   try {
     // [rows] - the first item out of the result array. destructuring assignment.
@@ -58,7 +71,7 @@ export async function addReview(uid, profile, anime_uid, review, score) {
 insert into reviews (uid, profile, anime_uid, text, score)
 values(?,?,?,?,?)
 `,
-      [uid,profile,anime_uid, review, score]
+      [uid, profile, anime_uid, review, score]
     );
     return { result: result, query_status: "ok" };
   } catch (err) {
@@ -184,12 +197,10 @@ export async function isUsernameTaken(username) {
 export async function createUser(profile_name, gender, birthday, password) {
   try {
     if (await isUsernameTaken(profile_name)) {
-      console.log("taken!");
-      return null;
+      return { result: "error: username taken", error: "yes" };
     }
     // [rows] - the first item out of the result array. destructuring assignment.
     const total_users = await getNumOfUsers();
-
     const id = total_users + 1;
     const result = await connection.query(
       `
@@ -198,9 +209,9 @@ export async function createUser(profile_name, gender, birthday, password) {
     `,
       [id, profile_name, password, gender, birthday]
     );
-    return result;
+    return { result: result, error: "no" };
   } catch (err) {
-    return err;
+    return { result: err, error: "yes" };
   }
 }
 
@@ -237,16 +248,9 @@ export async function check_credentials(username, password) {
     `,
       [username, password]
     );
-    let res = true;
-    if (result.length == 0) {
-      console.log("doesn't exits!");
-      res = false;
-    } else {
-      console.log("exits!");
-    }
-    return res;
+    return { result: result, error: "no" };
   } catch (err) {
-    return err;
+    return { result: err, error: "yes" };
   }
 }
 

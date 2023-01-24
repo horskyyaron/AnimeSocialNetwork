@@ -26,16 +26,25 @@ import {
   addReview,
   updateUserReview,
   addAnimeToFav,
+  getUserId,
 } from "./database.js";
 
 const app = express();
 app.use(express.json());
 
 app.use(cors());
+
 app.get("/all_genres", async (req, res) => {
-  const genres = await getAllGenres();
+  const genres = await getallgenres();
   res.send(genres);
 });
+
+app.get("/:profile_name/id", async (req, res) => {
+  const profile_name = req.params.profile_name;
+  const genres = await getUserId(profile_name);
+  res.send(genres);
+});
+
 
 app.get("/all_animes", async (req, res) => {
   const result = await getAllAnimesNames();
@@ -146,24 +155,25 @@ app.post("/update_review", async (req, res) => {
 });
 
 app.post("/register", async (req, res) => {
-  const { gender, password, birthday, profile_name } = req.body;
-  const result = await createUser(profile_name, gender, birthday, password);
-  let msg = "";
-  if (result == null) {
-    console.log("username taken");
-    msg = "unsucsesfull register :(";
-  } else {
-    console.log("added user!");
-    msg = "sucsesfull register! :)";
-  }
-  res.send({ result: msg });
+  const { gender, password, birthday, username } = req.body;
+  const result = await createUser(username, gender, birthday, password);
+  res.send(result);
+
+  // let msg = "";
+  // if (result == null) {
+  //   console.log("username taken");
+  //   msg = "unsucsesfull register :(";
+  // } else {
+  //   console.log("added user!");
+  //   msg = "sucsesfull register! :)";
+  // }
+  // res.send({ result: msg });
 });
 
 app.post("/login", async (req, res) => {
-  const username = req.body.username;
-  const password = req.body.password;
+  const { username, password } = req.body;
   const result = await check_credentials(username, password);
-  res.send({ result: result });
+  res.send(result);
 });
 
 app.post("/add_anime", async (req, res) => {
