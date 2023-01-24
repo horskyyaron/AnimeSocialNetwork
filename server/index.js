@@ -91,7 +91,7 @@ app.get("/:id/count_fav_animes", async (req, res) => {
 });
 
 app.get("/top_animes", async (req, res) => {
-  const animes = await getTopAnimes(3, 100);
+  const animes = await getTopAnimes(5, 100);
   res.send(animes);
 });
 
