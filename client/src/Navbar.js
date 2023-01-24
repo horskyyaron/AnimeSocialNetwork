@@ -4,10 +4,9 @@ export default function Navbar() {
     const path = window.location.pathname
     return ( 
     <nav className="nav">
-        <Link to="/" className="site-title">MyAnimeList</Link>
+        <Link to="/" className="site-title">AnimeSocialNetwork</Link>
         <ul>
             <CustomLink to="/myprofile">MyProfile</CustomLink>
-            <CustomLink to="/about">About</CustomLink>
             <CustomLink to="/login">Login</CustomLink>
         </ul>
     </nav>

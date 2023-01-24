@@ -1,7 +1,8 @@
-
 import {useRef, useState, useEffect, useContext} from 'react';
-import { Axios } from "axios";
+import Axios from "axios";
 import { Link } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const Login = () => {
@@ -12,21 +13,31 @@ const Login = () => {
     const [pwd, setPwd] = useState('');
 
     const [errMsg, setErrMsg] = useState('');
-    const [success, setSuccess] = useState(false);
 
-    const [loginStatus, setLoginStatus] = useState("");
 
-    const login = () => {
-        Axios.post('http://localhost3001/login', {
+    const [loginStatus, setLoginStatus] = useState(false);
+
+    const errorMessage = "Username/Password incorrect";
+    
+    const notifyOnFailure = () => {
+        setUser('');
+        setPwd('');
+        toast(errorMessage);
+    } 
+
+    const login = async (e) => {
+        e.preventDefault();
+        Axios.post("http://localhost:3001/login", {
             username: user,
             password: pwd,
         }).then((response) => {
-            if (response.data.message) {
-                setLoginStatus(response.data.massage)
+            if(response.data.length > 0) {
+                setLoginStatus(true);
+                console.log(response.data);
+                console.log(loginStatus);
             } else {
-                setLoginStatus(response.data[0].username)
+                notifyOnFailure();
             }
-            console.log(response.data)
         });
     };
 
@@ -38,34 +49,25 @@ const Login = () => {
         setErrMsg('')
     }, [user, pwd])
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        console.log(user, pwd)
-        setUser('')
-        setPwd('')
-        setSuccess(true);
-    }
-
+   
     return (
-        <>
-            {success ? (
-                <section>
-                    <h1> You are logged in!</h1>
-                    <br />
-                    <p>
-                        <a href="#">Go to Home</a>
-                    </p>
-                </section>
-            ) : (
-
+        <>   
+          {loginStatus ? (
             <section>
-
+                <h1>You are logged in!</h1>
+                <br />
+                <Link to="/">
+                    <p>Go to Home</p>
+                </Link>
+            </section>
+          ) : (
+            <section>
                 <p ref={errRef} className={errMsg ? "errmsg" :
                 "offscreen"} aria-live="assertive">{errMsg}</p> 
 
                 <h1>Sign in</h1>   
 
-                <form onSubmit={handleSubmit}>
+                <form>
 
                     <label htmlFor="username">Username:</label>
                     <input 
@@ -102,10 +104,11 @@ const Login = () => {
                             <a href="#">Sign Up</a>
                         </Link>
                     </span>
-                </p> 
+                </p>
+                <ToastContainer /> 
             </section>
-            )}
-            </>
+          )}  
+        </>
     )
 }
 
