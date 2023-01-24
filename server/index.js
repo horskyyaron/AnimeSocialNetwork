@@ -17,20 +17,27 @@ import {
   getMostRecentReview,
   getUsersNumberOfReviews,
   getUserTotalFavAnimes,
+  getAllAnimesNames,
   getLastAnimeId,
   add_anime,
   isAnimeExists,
   addAnimeGenres,
   updateUserReview,
+  addAnimeToFav,
 } from "./database.js";
 
 const app = express();
 app.use(express.json());
-app.use(cors());
 
+app.use(cors());
 app.get("/all_genres", async (req, res) => {
   const genres = await getAllGenres();
   res.send(genres);
+});
+
+app.get("/all_animes", async (req, res) => {
+  const result = await getAllAnimesNames();
+  res.send(result);
 });
 
 app.get("/:anime/is_exists", async (req, res) => {
@@ -113,13 +120,15 @@ app.post("/update_genres", async (req, res) => {
   res.send({ result: result });
 });
 
+app.post("/add_to_fav", async (req, res) => {
+  const { user_id, anime_id } = req.body;
+  const result = await addAnimeToFav(user_id, anime_id);
+  res.send({ result: result });
+});
+
 app.post("/update_review", async (req, res) => {
   const { text, score, rev_id } = req.body;
-  const result = await updateUserReview(
-    text,
-    score,
-    rev_id
-  );
+  const result = await updateUserReview(text, score, rev_id);
   res.send(result);
 });
 

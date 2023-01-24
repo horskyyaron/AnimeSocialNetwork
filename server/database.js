@@ -28,6 +28,17 @@ export async function getProfiles() {
   }
 }
 
+export async function getAllAnimesNames() {
+  try {
+    // [rows] - the first item out of the result array. destructuring assignment.
+    const [result] = await connection.query(
+      "select uid,title,img_url from animes order by title"
+    );
+    return { result: result, query_status: "ok" };
+  } catch (err) {
+    return { result: err, query_status: "error" };
+  }
+}
 // Veronin 44430
 // prepared statement = ?
 /**
@@ -165,6 +176,22 @@ export async function createUser(profile_name, gender, birthday, password) {
     return result;
   } catch (err) {
     return err;
+  }
+}
+
+export async function addAnimeToFav(user_id, anime_id) {
+  try {
+    const result = await connection.query(
+      `
+    insert into favorites (profile_id, fav_anime_id)
+    values(?,?)
+    `,
+      [user_id, anime_id]
+    );
+    return { result: result, addition: "ok" };
+  } catch (err) {
+    console.log(err);
+    return { result: err, addition: "error" };
   }
 }
 
