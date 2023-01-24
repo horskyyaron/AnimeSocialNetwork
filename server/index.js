@@ -27,6 +27,9 @@ import {
   updateUserReview,
   addAnimeToFav,
   getUserId,
+  getAnimeDetails,
+  getReviewDetails,
+  getIDByProfileName
 } from "./database.js";
 
 const app = express();
@@ -88,9 +91,10 @@ app.get("/:id/count_fav_animes", async (req, res) => {
 });
 
 app.get("/top_animes", async (req, res) => {
-  const animes = await getTopAnimes(10, 100);
+  const animes = await getTopAnimes(3, 100);
   res.send(animes);
 });
+
 app.get("/profiles", async (req, res) => {
   const profiles = await getProfiles();
   res.send(profiles);
@@ -175,6 +179,40 @@ app.post("/login", async (req, res) => {
   const result = await check_credentials(username, password);
   res.send(result);
 });
+
+/*get anime details*/
+app.post('/anime', async (req, res) => {
+  const animeName = req.body.animeName;
+  const result = await getAnimeDetails(animeName);
+  if(result.length > 0) {
+    // console.log(result);
+    res.send(result)
+  } else {
+      res.send(null);
+      console.log("Anime doesnt exist");
+  }
+});
+
+/*get user details*/
+app.post('/user', async (req, res) => {
+  const username = req.body.username;
+  const idRes = await getIDByProfileName(username);
+  if(idRes.length > 0) {
+    var data = JSON.parse(JSON.stringify(idRes));
+    var id = data[0].id;
+    const favAnimesRes = await getUserFavAnimes(id);
+    const reviewDetailsRes = await getReviewDetails(username);
+    
+    const userData = [favAnimesRes, reviewDetailsRes];
+    if(favAnimesRes.length > 0) {
+      console.log(favAnimesRes);
+      res.send(userData);
+    } 
+  } else {
+    res.send(null);
+    console.log("User doesnt exist");
+  }
+})
 
 app.post("/add_anime", async (req, res) => {
   const { anime_name, summary, aired_date, end_date, episodes, img_url, id } =
