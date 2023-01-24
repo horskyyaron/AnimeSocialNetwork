@@ -32,8 +32,8 @@
 }
 
 .interactive_section {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }
 .interactive_section .container {
   display: flex;
@@ -71,6 +71,7 @@
 .fav_animes_container {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .fav_anime {

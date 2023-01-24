@@ -21,7 +21,8 @@ export default function MyProfile({ user_name, user_id }) {
   );
 
   const [most_recent_rev, error3, loading3] = useFetch(
-    `http://localhost:8080/${user_id}/most_recent`
+    `http://localhost:8080/${user_id}/most_recent`,
+    [added_new_anime_to_fav]
   );
   const [genres, error6, loading6] = useFetch(
     `http://localhost:8080/all_genres`
@@ -75,7 +76,13 @@ export default function MyProfile({ user_name, user_id }) {
       />
     );
   } else if (edit_reviews) {
-    return <EditMyReview onCancel={handleCancelEditReviews} />;
+    return (
+      <EditMyReview
+        user_id={user_id}
+        user_name={user_name}
+        onCancel={handleCancelEditReviews}
+      />
+    );
   } else if (add_review) {
     return (
       <AddReview
@@ -113,7 +120,7 @@ export default function MyProfile({ user_name, user_id }) {
             </button>
           </div>
           <div className="latest_review">
-            <h3>most recent review: </h3>
+            <h3>review with highest score</h3>
             {loading3 ? (
               <h1>loading</h1>
             ) : (

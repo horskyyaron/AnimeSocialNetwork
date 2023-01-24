@@ -319,15 +319,18 @@ export async function getMostRecentReview(profile_id) {
   try {
     const [result] = await connection.query(
       `
+
 select title,img_url,text from animes
 join (
-select anime_uid,text from reviews 
+select anime_uid,text,score from reviews 
 join (
 select profile_name from profiles where id = ?
 ) as t
 on reviews.profile = t.profile_name
 ) as t2
 on anime_uid = uid
+order by score desc limit 1
+
     `,
       [profile_id]
     );

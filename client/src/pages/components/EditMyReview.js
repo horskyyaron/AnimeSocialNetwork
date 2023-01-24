@@ -3,9 +3,7 @@ import axios from "axios";
 
 import ReviewBox from "./ReviewBox.js";
 
-export default function EditReviews({ onCancel }) {
-    const profile = "-Melancholy-";
-
+export default function EditReviews({ onCancel, user_id, user_name }) {
     const [refreshPage, setRefreshPage] = useState(false);
     const [reviews, setReviews] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -19,7 +17,7 @@ export default function EditReviews({ onCancel }) {
             setLoading(true);
             try {
                 const result = await axios.get(
-                    ` http://localhost:8080/${profile}/get_reviews`,
+                    ` http://localhost:8080/${user_name}/get_reviews`,
                     { signal: controller.signal }
                 ); //fetching data from server
                 setReviews(result.data["reviews"]); //updating the jokes array state, which will rerender the component.
