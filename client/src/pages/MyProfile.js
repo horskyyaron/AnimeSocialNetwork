@@ -8,9 +8,7 @@ import AddReview from "./components/AddReview.js";
 import AddAnimeToFav from "./components/AddAnimeToFav.js";
 import "./MyProfile.css";
 
-export default function MyProfile() {
-  const id = 210;
-
+export default function MyProfile({ user_name, user_id }) {
   const [add_new_anime, setAddNewAnime] = useState(false);
   const [edit_reviews, setEditReviews] = useState(false);
   const [add_anime_to_fav, setAddAnimeToFav] = useState(false);
@@ -18,12 +16,12 @@ export default function MyProfile() {
   const [added_new_anime_to_fav, setAddedNewAnimeToFav] = useState("");
 
   const [fav_animes, error, loading] = useFetch(
-    `http://localhost:8080/${id}/fav_animes`,
+    `http://localhost:8080/${user_id}/fav_animes`,
     [added_new_anime_to_fav]
   );
 
   const [most_recent_rev, error3, loading3] = useFetch(
-    `http://localhost:8080/${id}/most_recent`
+    `http://localhost:8080/${user_id}/most_recent`
   );
   const [genres, error6, loading6] = useFetch(
     `http://localhost:8080/all_genres`
@@ -64,7 +62,7 @@ export default function MyProfile() {
   if (add_anime_to_fav) {
     return (
       <AddAnimeToFav
-        user_id={id}
+        user_id={user_id}
         onCancel={handleAddFavCancel}
         onAdd={handleAddToFav}
       />
@@ -81,7 +79,7 @@ export default function MyProfile() {
   } else if (add_review) {
     return (
       <AddReview
-        user_id={id}
+        user_id={user_id}
         onAdd={handleAddNewReviewSent}
         onCancel={handleAddNewReviewCancel}
       />
@@ -89,7 +87,7 @@ export default function MyProfile() {
   } else {
     return (
       <>
-        <MyProfileNav id={id} />
+        <MyProfileNav user_id={user_id} user_name={user_name} />
         <div className="interactive_section">
           <div className="container">
             <button

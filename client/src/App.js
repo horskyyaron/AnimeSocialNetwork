@@ -26,7 +26,10 @@ export default function App() {
       <div className="container">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/myprofile" element={<MyProfile />} />
+          <Route
+            path="/myprofile"
+            element={<MyProfile user_name={user_name} user_id={user_id} />}
+          />
           <Route path="/login" element={<Login onLogin={handleLogin} />} />
           <Route
             path="/register"

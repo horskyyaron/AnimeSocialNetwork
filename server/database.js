@@ -35,9 +35,9 @@ export async function getUserId(profile_name) {
       "select id from profiles where profile_name = ?",
       [profile_name]
     );
-    return {result: result, error: "no"};
+    return { result: result, error: "no" };
   } catch (err) {
-    return {result: err, error: "yes"};
+    return { result: err, error: "yes" };
   }
 }
 
@@ -241,7 +241,6 @@ export async function addAnimeToFav(user_id, anime_id) {
  */
 export async function check_credentials(username, password) {
   try {
-    // [rows] - the first item out of the result array. destructuring assignment.
     const [result] = await connection.query(
       `
         SELECT * FROM profiles WHERE profile_name = ? AND password = ?

@@ -23,24 +23,24 @@ const Login = ({ onLogin }) => {
       username: user,
       password: password,
     });
-    const user_id = result.data.result[0]["id"];
     if (result.data.result.length > 0) {
+      const user_id = result.data.result[0]["id"];
       onLogin(user, user_id);
       setLoginStatus(true);
     } else {
-      alert("wrong username/password");
-      setUser("");
-      setPassword("");
+      alert("wrong user name or password");
+      // notify();
+      // alert("wrong username/password");
+      // setUser("");
+      // setPassword("");
     }
   };
-  //
-  // useEffect(() => {
-  //   userRef.current.focus();
-  // }, []);
-  //
-  // useEffect(() => {
-  //   setErrMsg("");
-  // }, [user, password]);
+
+  const notify = () => {
+    setUser("");
+    setPassword("");
+    toast(errorMessage);
+  };
 
   return (
     <>

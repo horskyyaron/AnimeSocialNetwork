@@ -35,7 +35,7 @@ app.use(express.json());
 app.use(cors());
 
 app.get("/all_genres", async (req, res) => {
-  const genres = await getallgenres();
+  const genres = await getAllGenres();
   res.send(genres);
 });
 
