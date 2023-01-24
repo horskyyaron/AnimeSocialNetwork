@@ -151,8 +151,10 @@ export default function Home() {
                 {topAnimes &&
                   topUsers.map((user) => (
                     <div className="top_anime">
-                        <label>{user.profile}</label>
-                        <label>reviews: {user.num_of_reviews}</label>
+                      <label>{user.profile}</label>
+                      <span>
+                        reviews: <b>{user.num_of_reviews}</b>
+                      </span>
                     </div>
                   ))}
               </div>

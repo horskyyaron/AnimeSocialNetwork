@@ -1,9 +1,8 @@
 .top_animes {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
 }
-
 
 .top_anime {
   /* background-color: red; */
@@ -11,5 +10,13 @@
   border-radius: 10px;
   margin: 5px 5px 5px 5px;
   padding: 5px;
+  display: flex;
+  flex-direction: column;
   /* height: 200px; */
 }
+
+.top_anime label{
+    font-size: 20px;
+}
+
+
