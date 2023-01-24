@@ -13,6 +13,7 @@ import {
   getAnimeByGenreList,
   getUserReviews,
   getMostActiveUsers,
+  getLastReviewUid,
   check_credentials,
   getMostRecentReview,
   getUsersNumberOfReviews,
@@ -22,6 +23,7 @@ import {
   add_anime,
   isAnimeExists,
   addAnimeGenres,
+  addReview,
   updateUserReview,
   addAnimeToFav,
 } from "./database.js";
@@ -114,6 +116,11 @@ app.get("/:id/most_recent", async (req, res) => {
   res.send(review);
 });
 
+app.get("/last_review_uid", async (req, res) => {
+  const result = await getLastReviewUid();
+  res.send(result);
+});
+
 app.post("/update_genres", async (req, res) => {
   const { anime_id, anime_genres } = req.body;
   const result = await addAnimeGenres(anime_id, anime_genres);
@@ -123,6 +130,12 @@ app.post("/update_genres", async (req, res) => {
 app.post("/add_to_fav", async (req, res) => {
   const { user_id, anime_id } = req.body;
   const result = await addAnimeToFav(user_id, anime_id);
+  res.send({ result: result });
+});
+
+app.post("/add_review", async (req, res) => {
+  const { uid, profile, anime_uid, review, score } = req.body;
+  const result = await addReview(uid, profile, anime_uid, review, score);
   res.send({ result: result });
 });
 

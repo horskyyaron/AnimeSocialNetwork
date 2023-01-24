@@ -18,8 +18,9 @@ export default function MyProfile() {
   const [added_new_anime_to_fav, setAddedNewAnimeToFav] = useState("");
 
   const [fav_animes, error, loading] = useFetch(
-    `http://localhost:8080/${id}/fav_animes`
-  ,[added_new_anime_to_fav]);
+    `http://localhost:8080/${id}/fav_animes`,
+    [added_new_anime_to_fav]
+  );
 
   const [most_recent_rev, error3, loading3] = useFetch(
     `http://localhost:8080/${id}/most_recent`
@@ -42,8 +43,12 @@ export default function MyProfile() {
   const handleCancelEditReviews = () => {
     setEditReviews(false);
   };
-  const handleAddNewReview = (value = true) => {
+  const handleAddNewReviewCancel = (value = true) => {
     setAddReview(value);
+  };
+
+  const handleAddNewReviewSent = () => {
+    setAddReview(false);
   };
   const handleAddFavCancel = (value = true) => {
     //closing on cancel
@@ -52,7 +57,7 @@ export default function MyProfile() {
 
   const handleAddToFav = (anime_name) => {
     //closing on add component.
-    setAddedNewAnimeToFav(anime_name)
+    setAddedNewAnimeToFav(anime_name);
     setAddAnimeToFav(false);
   };
 
@@ -65,7 +70,6 @@ export default function MyProfile() {
       />
     );
   } else if (add_new_anime) {
-    // return <AddAnimeForm genres={genres} onAnimeAdd={handleAnimeAddition} />;
     return (
       <AddAnimeForm
         genres={genres}
@@ -75,7 +79,13 @@ export default function MyProfile() {
   } else if (edit_reviews) {
     return <EditMyReview onCancel={handleCancelEditReviews} />;
   } else if (add_review) {
-    return <AddReview onCancel={handleAddNewReview} />;
+    return (
+      <AddReview
+        user_id={id}
+        onAdd={handleAddNewReviewSent}
+        onCancel={handleAddNewReviewCancel}
+      />
+    );
   } else {
     return (
       <>
@@ -94,7 +104,10 @@ export default function MyProfile() {
             >
               <span>Add an anime to the community</span>
             </button>
-            <button onClick={handleAddNewReview} className="styled_button">
+            <button
+              onClick={handleAddNewReviewCancel}
+              className="styled_button"
+            >
               <span>add a new review</span>
             </button>
             <button onClick={handleAddFavCancel} className="styled_button">

@@ -1,0 +1,11 @@
+.add_review_form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.add_review_form textarea {
+    width: 600px;
+    height: 500px;
+}

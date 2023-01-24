@@ -39,8 +39,33 @@ export async function getAllAnimesNames() {
     return { result: err, query_status: "error" };
   }
 }
-// Veronin 44430
-// prepared statement = ?
+
+export async function getLastReviewUid() {
+  try {
+    const [result] = await connection.query(
+      "select uid from reviews order by uid desc limit 1"
+    );
+    return { result: result, query_status: "ok" };
+  } catch (err) {
+    return { result: err, query_status: "error" };
+  }
+}
+
+export async function addReview(uid, profile, anime_uid, review, score) {
+  try {
+    const [result] = await connection.query(
+      `
+insert into reviews (uid, profile, anime_uid, text, score)
+values(?,?,?,?,?)
+`,
+      [uid,profile,anime_uid, review, score]
+    );
+    return { result: result, query_status: "ok" };
+  } catch (err) {
+    return { result: err, query_status: "error" };
+  }
+}
+
 /**
  * return profile name from given profile id.
  *
