@@ -83,6 +83,13 @@
   /* height: 200px; */
 }
 
+.fav_anime img{
+  /* background-color: red; */
+    height: 300px;
+    width: 230px;
+  /* height: 200px; */
+}
+
 .styled_button {
   display: inline-block;
   border-radius: 4px;

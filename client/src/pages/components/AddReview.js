@@ -53,7 +53,7 @@ export default function AddReview({ onCancel, onAdd, user_id }) {
 
   return (
     <>
-      <h1>adding review form</h1>
+      <h1>Add Review</h1>
 
       <input type="search" onChange={(e) => setSearch(e.target.value)} />
       <div>
