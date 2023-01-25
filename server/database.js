@@ -28,6 +28,24 @@ export async function getProfiles() {
   }
 }
 
+export async function getTotalAnimesInAllGenres() {
+  try {
+    // [rows] - the first item out of the result array. destructuring assignment.
+    const [rows] = await connection.query(
+      ` 
+SELECT count(*) as total_animes,genre_name
+FROM anime_genre
+GROUP BY genre_name
+Order by total_animes Desc
+`
+    );
+
+    return rows;
+  } catch (err) {
+    return err;
+  }
+}
+
 export async function getUserId(profile_name) {
   try {
     // [rows] - the first item out of the result array. destructuring assignment.
@@ -365,31 +383,30 @@ where profile_id = ?
 
 export async function getReviewDetails(profile_name) {
   try {
- 
-   const [result] = await connection.query(
-     `
+    const [result] = await connection.query(
+      `
      SELECT profile,animes.title as title,img_url,text, score FROM reviews
      JOIN animes
      ON reviews.anime_uid = animes.uid
      WHERE profile=?
      LIMIT 3
      `,
-     [profile_name]
-   )
-   return result;
- } catch(err) {
-   return err;
+      [profile_name]
+    );
+    return result;
+  } catch (err) {
+    return err;
   }
- }
+}
 
- export async function getIDByProfileName(profile_name) {
+export async function getIDByProfileName(profile_name) {
   try {
     const [rows] = await connection.query(
       "SELECT id as id FROM profiles WHERE profile_name = ?",
       [profile_name]
     );
     return rows;
-  } catch(err) {
+  } catch (err) {
     return err;
   }
 }
@@ -398,14 +415,13 @@ export async function getAnimeDetails(title) {
   try {
     const [rows] = await connection.query(
       "SELECT * FROM animes WHERE title = ?",
-       [title]
-       );
-       return rows;
-  } catch(err) {
+      [title]
+    );
+    return rows;
+  } catch (err) {
     return err;
   }
 }
-
 
 /**
  * return all genres in the database.

@@ -21,7 +21,11 @@ export default function Home() {
     "http://localhost:8080/active_users"
   );
 
-  console.log(animeDetails);
+  const [genresStatistics, loading2, error2] = useFetch(
+    "http://localhost:8080/get_total_animes_in_genres"
+  );
+
+  console.log(genresStatistics);
 
   const animeErrorMessage = "Anime doesnt exist";
   const userErrorMessasge = "User doesnt exist";
@@ -156,6 +160,17 @@ export default function Home() {
                       <span>
                         reviews: <b>{user.num_of_reviews}</b>
                       </span>
+                    </div>
+                  ))}
+              </div>
+              <h2>Anime Genres Statistics</h2>
+              <div className="top_animes">
+                <br />
+                {genresStatistics &&
+                  genresStatistics.map((g) => (
+                    <div className="top_anime">
+                      <label>{g.genre_name}</label>
+                      <label>{g.total_animes}</label>
                     </div>
                   ))}
               </div>

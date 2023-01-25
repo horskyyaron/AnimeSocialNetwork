@@ -29,7 +29,8 @@ import {
   getUserId,
   getAnimeDetails,
   getReviewDetails,
-  getIDByProfileName
+  getIDByProfileName,
+  getTotalAnimesInAllGenres,
 } from "./database.js";
 
 const app = express();
@@ -42,12 +43,16 @@ app.get("/all_genres", async (req, res) => {
   res.send(genres);
 });
 
+app.get("/get_total_animes_in_genres", async (req, res) => {
+  const genres = await getTotalAnimesInAllGenres();
+  res.send(genres);
+});
+
 app.get("/:profile_name/id", async (req, res) => {
   const profile_name = req.params.profile_name;
   const genres = await getUserId(profile_name);
   res.send(genres);
 });
-
 
 app.get("/all_animes", async (req, res) => {
   const result = await getAllAnimesNames();
@@ -181,38 +186,38 @@ app.post("/login", async (req, res) => {
 });
 
 /*get anime details*/
-app.post('/anime', async (req, res) => {
+app.post("/anime", async (req, res) => {
   const animeName = req.body.animeName;
   const result = await getAnimeDetails(animeName);
-  if(result.length > 0) {
+  if (result.length > 0) {
     // console.log(result);
-    res.send(result)
+    res.send(result);
   } else {
-      res.send(null);
-      console.log("Anime doesnt exist");
+    res.send(null);
+    console.log("Anime doesnt exist");
   }
 });
 
 /*get user details*/
-app.post('/user', async (req, res) => {
+app.post("/user", async (req, res) => {
   const username = req.body.username;
   const idRes = await getIDByProfileName(username);
-  if(idRes.length > 0) {
+  if (idRes.length > 0) {
     var data = JSON.parse(JSON.stringify(idRes));
     var id = data[0].id;
     const favAnimesRes = await getUserFavAnimes(id);
     const reviewDetailsRes = await getReviewDetails(username);
-    
+
     const userData = [favAnimesRes, reviewDetailsRes];
-    if(favAnimesRes.length > 0) {
+    if (favAnimesRes.length > 0) {
       console.log(favAnimesRes);
       res.send(userData);
-    } 
+    }
   } else {
     res.send(null);
     console.log("User doesnt exist");
   }
-})
+});
 
 app.post("/add_anime", async (req, res) => {
   const { anime_name, summary, aired_date, end_date, episodes, img_url, id } =
