@@ -21,7 +21,7 @@ export default function Home() {
     "http://localhost:8080/active_users"
   );
 
-  console.log(topUsers);
+  console.log(animeDetails);
 
   const animeErrorMessage = "Anime doesnt exist";
   const userErrorMessasge = "User doesnt exist";
@@ -83,6 +83,7 @@ export default function Home() {
           title={animeDetails[0].title}
           summary={animeDetails[0].summary}
           img_url={animeDetails[0].img_url}
+          episodes={animeDetails[0].episodes}
         ></Anime>
         <button onClick={clear}>Search Another</button>
       </div>
