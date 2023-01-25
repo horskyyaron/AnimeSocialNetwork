@@ -25,8 +25,6 @@ export default function Home() {
     "http://localhost:8080/get_total_animes_in_genres"
   );
 
-  console.log(genresStatistics);
-
   const animeErrorMessage = "Anime doesnt exist";
   const userErrorMessasge = "User doesnt exist";
 
@@ -36,7 +34,6 @@ export default function Home() {
         return res.json();
       })
       .then((data) => {
-        console.log(data);
         setTopAnimes(data);
       });
   }, []);
@@ -64,7 +61,6 @@ export default function Home() {
     }).then((response) => {
       if (response.data != "") {
         setUserDetails(response.data);
-        console.log(userDetails[0]);
       } else {
         console.log("empty");
         clear();
@@ -153,7 +149,7 @@ export default function Home() {
               </div>
               <h2>Top 10 most Active useres</h2>
               <div className="top_animes">
-                {topAnimes &&
+                {topUsers &&
                   topUsers.map((user) => (
                     <div className="top_anime">
                       <label>{user.profile}</label>

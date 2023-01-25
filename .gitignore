@@ -13,3 +13,7 @@ server/node_modules
 website/.venv
 submittion_stuff
 user_manual.docx
+client/package-lock.json
+server/package-lock.json
+user_manual.docx
+~$er_manual.docx
